@@ -1,11 +1,8 @@
 
 
-
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "";
-
 export async function fetchGemini() {
   const allCookies = getCookies();
-    const response = await fetch(`${API_URL}/api/gemini`, {
+    const response = await fetch(`/api/gemini`, {
         method: "GET",
         headers: {
           cookie: allCookies

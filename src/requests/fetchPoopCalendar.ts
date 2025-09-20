@@ -2,11 +2,9 @@
 import { PoopCalendar } from "@/types/PoopCalendar";
 
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "";
-
 export async function fetchPoopCalendar(): Promise<PoopCalendar[]> {
   const allCookies = getCookies();
-    const response = await fetch(`${API_URL}/api/poops`, {
+    const response = await fetch(`/api/poops`, {
         method: "GET",
         headers: {
           cookie: allCookies
@@ -22,7 +20,7 @@ export async function fetchPoopCalendar(): Promise<PoopCalendar[]> {
 
 export async function getLastPoop(): Promise<PoopCalendar> {
   const allCookies = getCookies();
-    const response = await fetch(`${API_URL}/api/poops/last`, {
+    const response = await fetch(`/api/poops/last`, {
         method: "GET",
         headers: {
           cookie: allCookies
@@ -35,10 +33,9 @@ export async function getLastPoop(): Promise<PoopCalendar> {
     return data as PoopCalendar;
 }
 
-
 export async function createPoop(): Promise<PoopCalendar> {
   const allCookies = getCookies();
-  const response = await fetch(`${API_URL}/api/poops`, {
+  const response = await fetch(`/api/poops`, {
       method: "POST",
       headers: {
         cookie: allCookies
@@ -53,7 +50,7 @@ export async function createPoop(): Promise<PoopCalendar> {
 
 export async function updatePoop(poopId: string): Promise<PoopCalendar> {
   const allCookies = getCookies();
-  const response = await fetch(`${API_URL}/api/poops`, {
+  const response = await fetch(`/api/poops`, {
       method: "PUT",
       body: JSON.stringify({
         poopId: poopId,
