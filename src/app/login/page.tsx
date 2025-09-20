@@ -12,17 +12,14 @@ export default function Login() {
   const [state, setState] = useState({ message: '' })
 
   const submitLogin = async (formData: FormData) => {
-    try {
-      const user = await authAction(formData);
-      console.log(user);
-      if (user?.id) {
-        useUserStore.setState({ user: user });
-        router.push('/home');
-        console.log("home");
-      }
-    } catch (error: any) {
-      console.log(error);
-      setState({ message: error.message });
+    const data = await authAction(formData);
+    if (!data?.success) {
+      setState({ message: data?.error ?? "" });
+    }
+    if (data?.user?.id) {
+      useUserStore.setState({ user: data?.user });
+      router.push('/home');
+      console.log("home");
     }
   }
 

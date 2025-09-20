@@ -6,7 +6,7 @@ import { User } from "@supabase/supabase-js"
 import { updateUserEmailVerification } from '@/database/Users';
 
 
-export async function authAction(formData: FormData): Promise<User | null> {
+export async function authAction(formData: FormData): Promise<{ success: boolean, user?: User, error?: string }> {
   const action = formData.get("action");
 
   if (action === "login") {
@@ -17,11 +17,11 @@ export async function authAction(formData: FormData): Promise<User | null> {
     return signup(formData);
   }
 
-  return null;
+  return { success: false };
 }
 
 
-async function login(formData: FormData): Promise<User> {
+async function login(formData: FormData): Promise<{ success: boolean, user?: User, error?: string }> {
   const supabase = await createClient()
   const userData = {
     email: formData.get('email') as string,
@@ -30,13 +30,13 @@ async function login(formData: FormData): Promise<User> {
   
   const { data, error } = await supabase.auth.signInWithPassword(userData)
   if (error) {
-    throw new Error(error.message);
+    return { success: false, error: error.message };
   }
-  return data.user;
+  return { success: true, user: data.user };
 }
 
 
-async function signup(formData: FormData): Promise<User | null> {
+async function signup(formData: FormData): Promise<{ success: boolean, user?: User, error?: string }> {
   const supabase = await createClient()
   const userData = {
     email: formData.get('email') as string,
@@ -45,7 +45,7 @@ async function signup(formData: FormData): Promise<User | null> {
 
   const { data, error } = await supabase.auth.signUp(userData)
   if (error) {
-    throw new Error(error.message);
+    return { success: false, error: error.message };
   }
 
   await updateUserEmailVerification(data.user?.id ?? "");
