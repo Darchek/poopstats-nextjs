@@ -14,11 +14,14 @@ export default function Login() {
   const submitLogin = async (formData: FormData) => {
     try {
       const user = await authAction(formData);
+      console.log(user);
       if (user?.id) {
         useUserStore.setState({ user: user });
         router.push('/home');
+        console.log("home");
       }
     } catch (error: any) {
+      console.log(error);
       setState({ message: error.message });
     }
   }

@@ -1,9 +1,9 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabaseServer';
 import { User } from "@supabase/supabase-js"
+import { updateUserEmailVerification } from '@/database/Users';
 
 
 export async function authAction(formData: FormData): Promise<User | null> {
@@ -30,7 +30,7 @@ async function login(formData: FormData): Promise<User> {
   
   const { data, error } = await supabase.auth.signInWithPassword(userData)
   if (error) {
-    throw error;
+    throw new Error(error.message);
   }
   return data.user;
 }
@@ -45,9 +45,11 @@ async function signup(formData: FormData): Promise<User | null> {
 
   const { data, error } = await supabase.auth.signUp(userData)
   if (error) {
-    throw error;
+    throw new Error(error.message);
   }
-  return data.user;
+
+  await updateUserEmailVerification(data.user?.id ?? "");
+  return login(formData);
 }
 
 

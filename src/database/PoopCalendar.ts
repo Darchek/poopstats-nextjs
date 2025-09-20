@@ -13,6 +13,9 @@ export async function getListByUser(userId: string) {
 
 export async function getLastPoop(userId: string) {
     const { data, error } = await db.from(TABLE).select("*").eq("created_by", userId).order("started_at", { ascending: false }).limit(1).single();
+    if (error && error.code === 'PGRST116') {
+        return null;
+    }
     if (error) {
         console.log(error);
         throw new Error(error.message);

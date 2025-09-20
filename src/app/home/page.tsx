@@ -41,7 +41,6 @@ export default function Home() {
 
     const getLast = async () => {
         const lastPoop = await getLastPoop();
-        console.log(lastPoop);
         if (lastPoop && !lastPoop.ended_at) {
             const diference = new Date().getTime() - new Date(lastPoop.started_at).getTime();
             const seconds = diference / 1000;
